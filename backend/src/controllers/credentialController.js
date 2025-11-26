@@ -6,24 +6,27 @@ async function signupController(req, res) {
     const { name, email, password, userType } = req.body;
 
     try {
-        if (!name, !email, !password, !userType) {
-            return res.status(500).json({message:"Todos os campos devem ser preenchidos"});
+        console.log(name, email)
+        if (!name || !email || !password || !userType) {
+            return res.status(400).json({ message: "Todos os campos devem ser preenchidos" });
         }
+
         const userExist = await credentialModel.userExistModel(name);
-        if(userExist){
-            return res.status(500).json({message:"Este usuário já existe"});
+        if (userExist.length > 0) {
+            return res.status(400).json({ message: "Este usuário já existe" });
         }
-        else{
-            if (userType == "user") {
-                const encriptedPassword = bCrypt.hash(password, 10);
-                await credentialModel.signupModel(name, email, encriptedPassword, "user");
+
+        const encryptedPassword = await bCrypt.hash(password, 10);
+        console.log(encryptedPassword);
+        const ok = await credentialModel.signupModel(name, email, encryptedPassword, userType);
+        if (ok) {
+            return res.status(200).json({ message: "Cadastro realizado com sucesso" });
+        } else {
+            return res.status(500).json({ message: "Não foi possível realizar o cadastro" });
         }
-            else {
-                const encriptedPassword = bCrypt.hash(password, 10);
-                await credentialModel.signupModel(name, email, encriptedPassword, "salesman");
-        }
-        }
+
         
+
     } catch (error) {
         return res.status(500).json({ message: "Erro crítico" });
     }

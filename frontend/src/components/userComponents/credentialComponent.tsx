@@ -4,7 +4,8 @@ export default function SignupComponent(){
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [userType, setUserType] = useState("");
+    const [userType, setUserType] = useState("user");
+    const [response, setResponse] = useState("");
 
     async function sendRequest({
         name,
@@ -25,7 +26,7 @@ export default function SignupComponent(){
         }
         try{
             const res = await fetch(
-            `http://localhost:3000/credential/signup/${userType}`,{
+            `http://localhost:3000/credential/signup`,{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -35,8 +36,8 @@ export default function SignupComponent(){
                 
             }
             )
-            const response = await res.json()
-            window.alert(response)
+            const APIresponse = await res.json()
+            setResponse(APIresponse["message"])
         }
         catch{
             window.alert("Erro ao cadastrar")
@@ -51,5 +52,6 @@ export default function SignupComponent(){
             <option value="salesman">Vendedor</option>
         </select>
         <button onClick={() => sendRequest({ name, email, password, userType })}>Signup</button>
+        <p>{response}</p>
         </div>
     }
