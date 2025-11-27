@@ -1,38 +1,33 @@
-import { useState } from "react"
+import { useState } from "react";
+import api from "../../api";
 
-export default function LoginComponent(){
+export default function LoginComponent() {
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
-    async function login({name, password}:{name:string, password:string}) {
-        const body = {
-            "name":name,
-            "password":password
-        }
-        try{
-        const loginRes = await fetch(
-            `http://localhost:3000/credential/login`,{
-                method:"POST",
-                headers:{
-                    "Content-Type": "application/json"
-                },
-                body:
-                    JSON.stringify(body)
-            }
-            )
-            window.alert(loginRes.json)
-        }
-        catch{
-            window.alert("Erro grave")
-        }
+    async function login({ name, password }: { name: string, password: string }) {
+        try {
+            const res = await api.post("/credential/login", {
+                name,
+                password
+            });
+
+            window.alert(res.data["message"]);
+        } catch (err: any) {
+        if (err.response) {
+            window.alert(err.response.data.message);
+        } else {
+            // erro inesperado (sem resposta do servidor)
+            window.alert("Erro inesperado no login");
+        }}
     }
 
-    return(
+    return (
         <div>
-            <textarea value={name} onChange={(e)=>setName(e.target.value)}></textarea>
-            <textarea value={password} onChange={(e)=>setPassword(e.target.value)}></textarea>
-            <button onClick={() => login({name, password})}>Login</button>
+            <textarea value={name} onChange={(e) => setName(e.target.value)}></textarea>
+            <textarea value={password} onChange={(e) => setPassword(e.target.value)}></textarea>
+            <button onClick={() => login({ name, password })}>Login</button>
         </div>
-    )
+    );
 }

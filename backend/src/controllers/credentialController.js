@@ -3,11 +3,11 @@ require('dotenv').config();
 const bCrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-function saveJwt(token) {
+function saveJwt(res, token) {
     return res.cookie('token', token, {
         httpOnly: true,
         secure: false,
-        sameSite: 'Lax',
+        sameSite: 'None',
         path: '/',
         maxAge: 3600000
     })
@@ -47,11 +47,12 @@ async function loginController(req, res) {
     const {name, password} = req.body;
 
     try {
-        const user = await credentialModel.userExistModel(name)
+        const userRes = await credentialModel.userExistModel(name);
+        const user = userRes[0];
         if (user) {
             if (await bCrypt.compare(password, user.password)) {
                 const token = jwt.sign({"id":user.id, "userType":user.userType}, process.env.JWT_SECRET, {expiresIn:"48h"});
-                saveJwt(token);
+                saveJwt(res, token);
                 return res.status(200).json({message:"Usuário fez login com sucesso"});
             } else {
                 return res.status(500).json({message:"A senha está incorreta"})
