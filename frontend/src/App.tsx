@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'; 
 import SignupScreen from './pages/credential/signup'; 
-import LoginScreen from './pages/credential/login';   
+import LoginScreen from './pages/credential/login';
+import TestPage from "./pages/credential/test";   
 
 export default function App() {
   return (
@@ -10,6 +11,8 @@ export default function App() {
       <Route path="/signup" element={<SignupScreen />} />
 
       <Route path="/login" element={<LoginScreen />} />
+
+      <Route path="/test" element={<TestPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

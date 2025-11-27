@@ -7,7 +7,7 @@ function saveJwt(res, token) {
     return res.cookie('token', token, {
         httpOnly: true,
         secure: false,
-        sameSite: 'None',
+        sameSite: 'Lax',
         path: '/',
         maxAge: 3600000
     })
@@ -66,7 +66,17 @@ async function loginController(req, res) {
     }
 }
 
+async function test(req, res) {
+    const {id, userType} = req.user;
+    try {
+        return res.status(200).json({message:id});
+    } catch (error) {
+        return res.status(500).json({message:"Erro no controller"});
+    }
+}
+
 module.exports = {
     signupController,
-    loginController
+    loginController,
+    test
 };

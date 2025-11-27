@@ -10,6 +10,9 @@ export default function SignupScreen() {
                 <Link to="/login">
                     Faça Login
                 </Link>
+                <Link to="/test">
+                    Teste
+                </Link>
             </p>
         </div>
     )
