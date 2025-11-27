@@ -6,7 +6,7 @@ export default function SignupScreen() {
         <div>
             <SignupComponent/>
             <p>
-                Já tem uma conta?{' '}
+                Já tem uma conta?
                 <Link to="/login">
                     Faça Login
                 </Link>

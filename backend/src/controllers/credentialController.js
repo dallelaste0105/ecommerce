@@ -1,6 +1,17 @@
 const credentialModel = require("../models/credentialModel");
 require('dotenv').config();
 const bCrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+function saveJwt(token) {
+    return res.cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+        path: '/',
+        maxAge: 3600000
+    })
+}
 
 async function signupController(req, res) {
     const { name, email, password, userType } = req.body;
@@ -33,8 +44,22 @@ async function signupController(req, res) {
 }
 
 async function loginController(req, res) {
+    const {name, password} = req.body;
+
     try {
-        
+        const user = await credentialModel.userExistModel(name)
+        if (user) {
+            if (await bCrypt.compare(password, user.password)) {
+                const token = jwt.sign({"id":user.id, "userType":user.userType}, process.env.JWT_SECRET, {expiresIn:"48h"});
+                saveJwt(token);
+                return res.status(200).json({message:"Usuário fez login com sucesso"});
+            } else {
+                return res.status(500).json({message:"A senha está incorreta"})
+            } 
+        }
+        else{
+            return res.status(500).json({message:"Este usuário não existe"})
+        }
     } catch (error) {
         return res.status(500).json({message:"Erro crítico"});
     }
