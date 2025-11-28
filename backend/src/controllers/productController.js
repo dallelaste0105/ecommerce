@@ -21,7 +21,7 @@ async function createProductController(req, res) {
 async function getProductsController(req, res) {
     try {
         const products = await productModel.getProductModel();
-        res.status(200).json({message:products[0]})
+        res.status(200).json({message:products})
     } catch (error) {
         res.status(200).json({message:"Problemas ao retornar itens"})
     }

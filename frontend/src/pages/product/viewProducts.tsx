@@ -1,33 +1,36 @@
 import api from "../../api";
 import { useState, useEffect } from "react";
+import ProductCard from "../../components/product/productCard";
 
 export default function ViewProducts() {
 
-    const [response, setResponse] = useState("");
+    const [products, setProducts] = useState<any[]>([]);
 
-    async function getproducts() {
+    async function getProducts() {
         try {
             const res = await api.get("/product/getproducts",
                 { withCredentials: true }
             );
-            setResponse(res.data.message);
+            setProducts(res.data.message); 
         }
         catch (err: any) {
-            if (err.response) {
-                setResponse(err.response.data.message);
-            } else {
-                setResponse("Erro inesperado ao criar produto");
-            }
+            setProducts([]);
         }
     }
 
     useEffect(() => {
-        getproducts();
+        getProducts();
     }, []);
 
     return (
         <div>
-            <p>{JSON.stringify(response)}</p>
+            {products.map((p) => (
+                <ProductCard
+                    key={p.id}
+                    name={p.name}
+                    price={p.price}
+                />
+            ))}
         </div>
     );
 }
