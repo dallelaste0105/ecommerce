@@ -1,8 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'; 
-import SignupScreen from './pages/user/signup'; 
-import LoginScreen from './pages/user/login';
-import TestPage from "./pages/user/test";
-import CreateProduct from "./pages/salesman/createProduct";   
+import SignupScreen from './pages/credential/signup'; 
+import LoginScreen from './pages/credential/login';
+import TestPage from "./pages/credential/test";
+import CreateProduct from "./pages/product/createProduct";   
+import ViewProducts from './pages/product/viewProducts';
 
 export default function App() {
   return (
@@ -16,6 +17,8 @@ export default function App() {
       <Route path="/test" element={<TestPage />} />
 
       <Route path="/createproduct" element={<CreateProduct />} />
+
+      <Route path="/viewproducts" element={<ViewProducts />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

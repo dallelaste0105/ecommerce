@@ -18,4 +18,16 @@ async function createProductController(req, res) {
 
 }
 
-module.exports = {createProductController}
+async function getProductsController(req, res) {
+    try {
+        const products = await productModel.getProductModel();
+        res.status(200).json({message:products[0]})
+    } catch (error) {
+        res.status(200).json({message:"Problemas ao retornar itens"})
+    }
+}
+
+module.exports = {
+    createProductController,
+    getProductsController
+}

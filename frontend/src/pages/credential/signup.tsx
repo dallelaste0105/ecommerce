@@ -1,4 +1,4 @@
-import SignupComponent from "../../components/user/SignupComponent";
+import SignupComponent from "../../components/credential/SignupComponent";
 import { Link } from 'react-router-dom';
 
 export default function SignupScreen() {
@@ -15,6 +15,9 @@ export default function SignupScreen() {
                 </Link>
                 <Link to="/createproduct">
                     Criar Produto
+                </Link>ViewProducts
+                <Link to="/viewproducts">
+                    View Products
                 </Link>
             </p>
         </div>

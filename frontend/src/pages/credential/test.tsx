@@ -1,4 +1,4 @@
-import TestComponent from "../../components/user/test";
+import TestComponent from "../../components/credential/test";
 
 
 export default function TestPage() {

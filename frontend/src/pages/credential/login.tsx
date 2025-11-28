@@ -1,4 +1,4 @@
-import LoginComponent from "../../components/user/loginComponent";
+import LoginComponent from "../../components/credential/loginComponent";
 
 export default function LoginScreen(){
     return(

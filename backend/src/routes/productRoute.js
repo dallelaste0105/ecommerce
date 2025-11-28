@@ -6,5 +6,6 @@ const jwtMiddleware = require('../controllers/jwtMiddleware');
 //product
 
 router.post('/create', jwtMiddleware.authMiddleware, productController.createProductController);
+router.get('/getproducts', jwtMiddleware.authMiddleware, productController.getProductsController);
 
 module.exports = router;
