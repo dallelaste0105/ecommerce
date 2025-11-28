@@ -1,4 +1,5 @@
 const credentialRoute = require('../src/routes/credentialRoute');
+const productRoute = require('../src/routes/productRoute');
 
 const express = require('express');
 const cors = require('cors');
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/credential', credentialRoute);
+app.use('/product', productRoute);
 
 app.listen(PORT, () => {
  console.log(`Servidor rodando em http://localhost:${PORT}`);

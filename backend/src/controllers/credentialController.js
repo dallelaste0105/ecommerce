@@ -53,7 +53,12 @@ async function loginController(req, res) {
             if (await bCrypt.compare(password, user.password)) {
                 const token = jwt.sign({"id":user.id, "userType":user.userType}, process.env.JWT_SECRET, {expiresIn:"48h"});
                 saveJwt(res, token);
-                return res.status(200).json({message:"Usuário fez login com sucesso"});
+                if (user.userType == "user") {
+                    return res.status(200).json({message:"Usuário fez login com sucesso"});
+                } else {
+                    return res.status(200).json({message:"Vendedor fez login com sucesso"});
+                }
+                
             } else {
                 return res.status(500).json({message:"A senha está incorreta"})
             } 

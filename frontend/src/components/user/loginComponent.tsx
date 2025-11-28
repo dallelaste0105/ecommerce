@@ -1,10 +1,12 @@
 import { useState } from "react";
 import api from "../../api";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginComponent() {
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     async function login({ name, password }: { name: string, password: string }) {
         try {
@@ -13,7 +15,12 @@ export default function LoginComponent() {
                 password
             });
 
-            window.alert(res.data["message"]);
+            if (res.data["message"] == "Usuário fez login com sucesso"){
+                navigate("/createproduct");
+            }
+            else{
+                navigate("/createproduct");
+            }
         } catch (err: any) {
         if (err.response) {
             window.alert(err.response.data.message);
