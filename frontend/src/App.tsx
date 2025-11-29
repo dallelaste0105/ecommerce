@@ -4,6 +4,7 @@ import LoginScreen from './pages/credential/login';
 import TestPage from "./pages/credential/test";
 import CreateProduct from "./pages/product/createProduct";   
 import ViewProducts from './pages/product/viewProducts';
+import CreateCampaignPromotion from './pages/product/createCampaignPromotion';
 
 export default function App() {
   return (
@@ -19,6 +20,8 @@ export default function App() {
       <Route path="/createproduct" element={<CreateProduct />} />
 
       <Route path="/viewproducts" element={<ViewProducts />} />
+
+      <Route path="/createcampaignpromotion" element={<CreateCampaignPromotion />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const productController = require('../controllers/productController');
+const promotionController = require('../controllers/promotionController');
 const jwtMiddleware = require('../controllers/jwtMiddleware');
 
 //promotion
 
-router.post('/create', jwtMiddleware.authMiddleware, productController.createProductController);
-router.get('/getproducts', jwtMiddleware.authMiddleware, productController.getProductsController);
+router.get('/getpromotionproducts', jwtMiddleware.authMiddleware, promotionController.getPromotionProducts);
+router.get('/getcampaigns', jwtMiddleware.authMiddleware, promotionController.getCampaigns);
+
+
+
 
 module.exports = router;
