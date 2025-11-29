@@ -2,27 +2,28 @@ import api from "../../api";
 import { useState, useEffect } from "react";
 import ProductCard from "../../components/product/productCard";
 
-export default function ViewProducts() {
+export default function GetPromotionProducts() {
+    const [campaigns, setCampaigns] = useState<any[]>([]);
 
-    const [products, setProducts] = useState<any[]>([]);
-
-    async function getProducts() {
+    async function getPromotionProducts() {
         try {
-            const res = await api.get("/product/getproducts",
+            const res = await api.get("/promotion/getpromotionproducts",
                 { withCredentials: true }
             );
-            setProducts(res.data.message); 
+            setCampaigns(res.data.message); 
         }
         catch (err: any) {
-            setProducts([]);
+            setCampaigns([]);
         }
     }
 
-    
+    useEffect(() => {
+        getPromotionProducts();
+    }, []);
 
     return (
         <div>
-            {products.map((p) => (
+            {campaigns.map((p) => (
                 <ProductCard
                     key={p.id}
                     name={p.name}
