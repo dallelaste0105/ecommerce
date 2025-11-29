@@ -4,7 +4,8 @@ import LoginScreen from './pages/credential/login';
 import TestPage from "./pages/credential/test";
 import CreateProduct from "./pages/product/createProduct";   
 import ViewProducts from './pages/product/viewProducts';
-import CreateCampaignPromotion from './pages/product/createCampaignPromotion';
+import CreateCampaignPromotion from './pages/campaignPromotions/createCampaignPromotion';
+import AddProductsToCampaign from './pages/campaignPromotions/addProductsToCampaignPromotion'
 
 export default function App() {
   return (
@@ -23,7 +24,10 @@ export default function App() {
 
       <Route path="/createcampaignpromotion" element={<CreateCampaignPromotion />} />
 
+      <Route path="/addproductstocampaign" element={<AddProductsToCampaign />} />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
+

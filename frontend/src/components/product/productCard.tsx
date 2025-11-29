@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function ProductCard({
     name,
     price,
@@ -9,6 +11,8 @@ export default function ProductCard({
 }) {
     return (
         <div>
+            <Link to="/addproductstocampaign">
+
             <h1>{name}</h1>
             <p>{price}</p>
             <img 
@@ -20,6 +24,7 @@ export default function ProductCard({
                     objectFit: "cover",
                 }}
             />
+            </Link>
         </div>
     );
 }

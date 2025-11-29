@@ -1,5 +1,5 @@
-import GetCampaigns from "../../components/campaign/getCampaigns";
-import GetPromotionProducts from "../../components/campaign/getPromotionProducts";
+import GetCampaigns from "../../components/campaignPromotions/getCampaigns";
+import GetPromotionProducts from "../../components/campaignPromotions/getPromotionProducts";
 
 export default function CreateCampaignPromotion () {
     return <div>

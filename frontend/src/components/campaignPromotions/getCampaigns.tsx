@@ -1,13 +1,13 @@
 import api from "../../api";
 import { useState, useEffect } from "react";
-import ProductCard from "../../components/product/productCard";
+import CampaignCard from "./campaignCard";
 
-export default function GetPromotionProducts() {
+export default function GetCampaigns() {
     const [campaigns, setCampaigns] = useState<any[]>([]);
 
-    async function getPromotionProducts() {
+    async function getCampaigns() {
         try {
-            const res = await api.get("/promotion/getpromotionproducts",
+            const res = await api.get("/promotion/getcampaigns",
                 { withCredentials: true }
             );
             setCampaigns(res.data.message); 
@@ -18,17 +18,16 @@ export default function GetPromotionProducts() {
     }
 
     useEffect(() => {
-        getPromotionProducts();
+        getCampaigns();
     }, []);
 
     return (
         <div>
             {campaigns.map((p) => (
-                <ProductCard
+                <CampaignCard
                     key={p.id}
                     name={p.name}
-                    price={p.price}
-                    url={p.imageUrl}
+                    description={p.description}
                 />
             ))}
         </div>
