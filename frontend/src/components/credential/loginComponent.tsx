@@ -16,10 +16,10 @@ export default function LoginComponent() {
             });
 
             if (res.data["message"] == "Usuário fez login com sucesso"){
-                navigate("/createproduct");
+                navigate("/initialpage");
             }
             else{
-                navigate("/createproduct");
+                navigate("/storeprofilepage");
             }
         } catch (err: any) {
         if (err.response) {
