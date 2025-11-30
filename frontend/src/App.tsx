@@ -4,6 +4,7 @@ import LoginScreen from './pages/userPages/loginPage';
 import InitialPage from './pages/userPages/initialPage';
 import StoreProfilePage from './pages/salesmanPages/storeProfilePage';
 import CreatePromotionPage from './pages/salesmanPages/createPromotionPage';
+import ProductDetailsPage from './pages/userPages/productDetailsPage';
 
 export default function App() {
   return (
@@ -18,10 +19,12 @@ export default function App() {
 
       <Route path="/storeprofilepage" element={<StoreProfilePage />} />
 
-      <Route path='/createpromotionpage' element={<CreatePromotionPage/>} />
+      <Route path='/createpromotionpage' element={<CreatePromotionPage />} />
+
+      {/* ROTA CORRIGIDA COM PARÂMETRO */}
+      <Route path='/productdetailspage/:name' element={<ProductDetailsPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
-

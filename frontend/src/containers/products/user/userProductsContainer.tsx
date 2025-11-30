@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../../api";
-import ProductComponent from "../../../components/products/user/userProductComponent";
+import UserProductComponent from "../../../components/products/user/userProductComponent";
 
 export default function ProductsContainer() {
 
@@ -26,7 +26,7 @@ export default function ProductsContainer() {
 
     return <div>
         {campaignProducts.map((p)=> (
-            <ProductComponent
+            <UserProductComponent
                 name={p.name}
             />
         ))}

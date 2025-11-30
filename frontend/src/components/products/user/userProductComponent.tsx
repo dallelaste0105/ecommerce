@@ -1,5 +1,10 @@
-export default function userProductComponent({name}:{name:string}) {
+import { Link } from "react-router-dom";
+
+export default function UserProductComponent({name}:{name:string}) {
     return <div>
-        <p>{name}</p>
+        <Link to={`/productdetailspage/${name}`}>
+            <p>{name}</p>
+        </Link>
+        
     </div>
 }
