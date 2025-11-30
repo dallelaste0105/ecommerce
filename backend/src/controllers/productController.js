@@ -21,13 +21,27 @@ async function createProductController(req, res) {
 async function getProductsController(req, res) {
     try {
         const products = await productModel.getProductModel();
+        console.log(products);
         res.status(200).json({message:products})
     } catch (error) {
         res.status(200).json({message:"Problemas ao retornar itens"})
     }
 }
 
+async function searchProductsController(req, res) {
+    const {search} = req.body;
+    try {
+        const products = await productModel.searchProductsModel(search);
+        console.log(products);
+        return res.status(200).json({message:products});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message:error});
+    }
+}
+
 module.exports = {
     createProductController,
-    getProductsController
+    getProductsController,
+    searchProductsController
 }

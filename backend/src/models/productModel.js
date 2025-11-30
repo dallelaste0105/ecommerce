@@ -36,8 +36,54 @@ async function getFavoritesSubtopics(id) {
     })
 }
 
+async function searchProductsModel(search) {
+    return new Promise((resolve, reject) => {
+
+        const fulltextQuery = `
+            SELECT 
+                id,
+                name,
+                MATCH(name) AGAINST (? IN NATURAL LANGUAGE MODE) AS score
+            FROM product
+            ORDER BY score DESC
+            LIMIT 50
+        `;
+
+        db.query(fulltextQuery, [search], (error, fulltextResults) => {
+            if (error) return reject(error);
+
+            // Se FULLTEXT encontrou algo (score > 0), retorna
+            const foundRelevant = fulltextResults.some(r => r.score > 0);
+
+            if (foundRelevant) {
+                return resolve(fulltextResults);
+            }
+
+            // FALLBACK (não achou nada relevante)
+            const fallbackQuery = `
+                SELECT 
+                    id,
+                    name,
+                    0 AS score
+                FROM product
+                WHERE name LIKE CONCAT('%', ?, '%')
+                LIMIT 50
+            `;
+
+            db.query(fallbackQuery, [search], (fallbackError, fallbackResults) => {
+                if (fallbackError) return reject(fallbackError);
+
+                return resolve(fallbackResults);
+            });
+        });
+    });
+}
+
+
+
 module.exports = {
     createProduct,
     getProductModel,
-    getFavoritesSubtopics
+    getFavoritesSubtopics,
+    searchProductsModel
 };
