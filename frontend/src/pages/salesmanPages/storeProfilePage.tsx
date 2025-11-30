@@ -1,7 +1,6 @@
 import {Link} from "react-router-dom";
-import CampaignProductsContainer from "../../containers/products/user/campaignProductsContainer";
-import PromotionProductsContainer from "../../containers/products/user/promotionProductsContainer";
-import ProductsContainer from "../../containers/products/user/productsContainer";
+import CampaignProductsContainer from "../../containers/products/salesman/salesmanCampaignProductsContainer";
+import PromotionProductsContainer from "../../containers/products/salesman/salesmanPromotionProductsContainer";
 
 export default function StoreProfilePage() {
     return <div>
@@ -15,19 +14,10 @@ export default function StoreProfilePage() {
 
 
         <h1>Produtos em Promoção</h1>
-        <Link to="/login">
+        <Link to="/createpromotionpage">
             Criar Promoção Única
         </Link>
         <PromotionProductsContainer/><br />
-        
-
-        <h1>Outros Produtos</h1>
-        <Link to="/login">
-            Criar Produto
-        </Link>
-        <ProductsContainer/><br />
-        
-        <br />
         
         
     </div>

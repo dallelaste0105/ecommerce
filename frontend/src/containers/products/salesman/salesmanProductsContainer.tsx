@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import api from "../../../api";
-import ProductComponent from "../../../components/products/user/userProductComponent";
+import ProductComponent from "../../../components/products/salesman/salesmanProductComponent";
 
-export default function CampaignProductsContainer() {
+export default function ProductsContainer() {
 
     const [campaignProducts, setCampaignProducts] = useState<any[]>([]);
 
-    async function getCampaignProducts() {
+    async function getProducts() {
         try {
-            const res = await api.get("/promotion/getcampaigns",{withCredentials:true})
+            const res = await api.get("/product/getproducts",{withCredentials:true})
             setCampaignProducts(res.data.message)
         } catch (err:any) {
             if (err.response) {
@@ -20,7 +20,7 @@ export default function CampaignProductsContainer() {
     }
 
     useEffect(() => {
-    getCampaignProducts();
+    getProducts();
 }, []);
 
 

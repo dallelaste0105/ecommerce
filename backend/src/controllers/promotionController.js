@@ -1,4 +1,5 @@
 const promotionModel = require("../models/promotionModel");
+const productModel = require("../models/productModel");
 
 async function getPromotionProducts(req, res) {
     const {id, userType} = req.user;
@@ -16,7 +17,7 @@ async function getPromotionProducts(req, res) {
 async function getCampaigns(req, res) {
     const {id, userType} = req.user;
     try {
-        const campaigns = await promotionModel.getCampaignsModel(id);
+        const campaigns = await promotionModel.getCampaignsModel();
         if (campaigns) {
             return res.status(200).json({message:campaigns});
         }

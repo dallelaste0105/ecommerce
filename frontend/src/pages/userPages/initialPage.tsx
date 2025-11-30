@@ -1,6 +1,6 @@
-import CampaignProductsContainer from "../../containers/products/user/campaignProductsContainer";
-import PromotionProductsContainer from "../../containers/products/user/promotionProductsContainer";
-import ProductsContainer from "../../containers/products/user/productsContainer";
+import CampaignProductsContainer from "../../containers/products/user/userCampaignProductsContainer";
+import PromotionProductsContainer from "../../containers/products/user/userPromotionProductsContainer";
+import ProductsContainer from "../../containers/products/user/userProductsContainer";
 
 export default function InitialPage() {
     return <div>

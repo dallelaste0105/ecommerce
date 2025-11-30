@@ -24,7 +24,20 @@ async function getProductModel() {
     })
 }
 
+async function getFavoritesSubtopics(id) {
+    return new Promise((resolve, reject) => {
+        const query1 = "SELECT subTagId WHERE userId = ?";
+        db.query(query1, [id], (error, result)=>{
+            if (error) {
+                return reject(error);
+            }
+            return resolve(result);
+        })
+    })
+}
+
 module.exports = {
     createProduct,
-    getProductModel
+    getProductModel,
+    getFavoritesSubtopics
 };

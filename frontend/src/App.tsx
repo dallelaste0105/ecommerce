@@ -3,6 +3,7 @@ import SignupScreen from './pages/userPages/signupPage';
 import LoginScreen from './pages/userPages/loginPage';
 import InitialPage from './pages/userPages/initialPage';
 import StoreProfilePage from './pages/salesmanPages/storeProfilePage';
+import CreatePromotionPage from './pages/salesmanPages/createPromotionPage';
 
 export default function App() {
   return (
@@ -16,6 +17,8 @@ export default function App() {
       <Route path="/initialpage" element={<InitialPage />} />
 
       <Route path="/storeprofilepage" element={<StoreProfilePage />} />
+
+      <Route path='/createpromotionpage' element={<CreatePromotionPage/>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
