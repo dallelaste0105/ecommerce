@@ -80,10 +80,84 @@ async function searchProductsModel(search) {
 }
 
 
+async function saveUserFavoriteSubtag(userId, productId) {
+    return new Promise((resolve, reject) => {
+
+        const getSubtagQuery = "SELECT subTagId FROM itemsubtag WHERE itemId = ?";
+        const getUserSubtagsQuery = "SELECT id, subTagId FROM userfavoritesubtag WHERE userId = ? ORDER BY id ASC";
+        const insertQuery = "INSERT INTO userfavoritesubtag (userId, subTagId) VALUES (?, ?)";
+        const deleteQuery = "DELETE FROM userfavoritesubtag WHERE id = ?";
+
+        if (!userId || !productId) {
+            const msg = "Parâmetros inválidos: userId e productId são obrigatórios.";
+            return reject(msg);
+        }
+
+        db.query(getSubtagQuery, [productId], (err1, subtagResult) => {
+            if (err1) {
+                return reject(err1);
+            }
+
+            if (!Array.isArray(subtagResult) || subtagResult.length === 0) {
+                db.query("SELECT * FROM itemsubtag LIMIT 10", [], (errDump, dumpRows) => {
+                    if (errDump) {
+                        console.warn("Falha ao listar itemsubtag para debug:", errDump);
+                    } else {
+                        console.log("Exemplo de rows em itemsubtag (debug):", dumpRows);
+                    }
+                    return reject("Esse item não tem subTagId associado (verifique itemsubtag).");
+                });
+                return;
+            }
+
+            const newSubTagId = subtagResult[0].subTagId;
+            if (!newSubTagId) {
+                return reject("subTagId inválido.");
+            }
+
+            db.query(getUserSubtagsQuery, [userId], (err2, userResult) => {
+                if (err2) {
+                    return reject(err2);
+                }
+
+
+                if (Array.isArray(userResult) && userResult.length >= 5) {
+                    const oldest = userResult[0].id;
+
+                    db.query(deleteQuery, [oldest], (err3) => {
+                        if (err3) {
+                            return reject(err3);
+                        }
+
+                        db.query(insertQuery, [userId, newSubTagId], (err4, result4) => {
+                            if (err4) {
+                                return reject(err4);
+                            }
+                            return resolve(result4);
+                        });
+                    });
+
+                } else {
+                    db.query(insertQuery, [userId, newSubTagId], (err5, result5) => {
+                        if (err5) {
+                            return reject(err5);
+                        }
+                        return resolve(result5);
+                    });
+                }
+            });
+        });
+    });
+}
+
+
+
+
 
 module.exports = {
     createProduct,
     getProductModel,
     getFavoritesSubtopics,
-    searchProductsModel
+    searchProductsModel,
+    saveUserFavoriteSubtag
 };

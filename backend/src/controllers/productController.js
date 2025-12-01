@@ -30,9 +30,13 @@ async function getProductsController(req, res) {
 
 async function searchProductsController(req, res) {
     const {search} = req.body;
+    const {id, userType} = req.user;
+
     try {
         const products = await productModel.searchProductsModel(search);
-        console.log(products);
+        const firstProductId = products[0]?.id;
+        const deuboa = await productModel.saveUserFavoriteSubtag(id, firstProductId);
+        console.log(deuboa);
         return res.status(200).json({message:products});
     } catch (error) {
         console.log(error);
