@@ -36,7 +36,6 @@ async function searchProductsController(req, res) {
         const products = await productModel.searchProductsModel(search);
         const firstProductId = products[0]?.id;
         const deuboa = await productModel.saveUserFavoriteSubtag(id, firstProductId);
-        console.log(deuboa);
         return res.status(200).json({message:products});
     } catch (error) {
         console.log(error);

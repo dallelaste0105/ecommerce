@@ -5,6 +5,7 @@ async function getPromotionProducts(req, res) {
     const {id, userType} = req.user;
     try {
         const promotionProducts = await promotionModel.getPromotionProductsModel(id);
+        
         if (promotionProducts) {
             return res.status(200).json({message:promotionProducts});
         }
