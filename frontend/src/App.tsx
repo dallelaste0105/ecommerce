@@ -5,6 +5,7 @@ import InitialPage from './pages/userPages/initialPage';
 import StoreProfilePage from './pages/salesmanPages/storeProfilePage';
 import CreatePromotionPage from './pages/salesmanPages/createPromotionPage';
 import ProductDetailsPage from './pages/userPages/productDetailsPage';
+import CartPage from './pages/userPages/cartPage';
 
 export default function App() {
   return (
@@ -21,8 +22,9 @@ export default function App() {
 
       <Route path='/createpromotionpage' element={<CreatePromotionPage />} />
 
-      {/* ROTA CORRIGIDA COM PARÂMETRO */}
       <Route path='/productdetailspage/:name' element={<ProductDetailsPage />} />
+
+      <Route path='/cartpage' element={<CartPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
