@@ -2,63 +2,126 @@ const db = require("../db");
 
 async function getPromotionProductsModel(userId) {
     return new Promise((resolve, reject) => {
+        console.log("[promotionModel] getPromotionProductsModel START, userId:", userId);
 
-        const q1 = `
-            SELECT 
-                p.id,
-                p.itemId,
-                p.subTagId,
-                i.name
-            FROM product p
-            JOIN item i ON i.id = p.itemId
-            WHERE p.promotionType = ?
-            LIMIT 50
-        `;
+        if (!userId && userId !== 0) {
+            const msg = "[promotionModel] Parâmetro inválido: userId ausente";
+            console.error(msg);
+            return reject(new Error(msg));
+        }
 
-        db.query(q1, ["single"], (err1, promotions) => {
-            if (err1) return reject(err1);
+        const qFav = `SELECT subTagId FROM userfavoritesubtag WHERE userId = ?`;
+        db.query(qFav, [userId], (errFav, favoriteRows) => {
+            if (errFav) {
+                console.error("[promotionModel] ERRO ao buscar userfavoritesubtag:", errFav);
+                return reject(errFav);
+            }
 
-            const q2 = `
-                SELECT subTagId 
-                FROM userfavoritesubtag 
-                WHERE userId = ?
+            const favoriteSubtags = Array.isArray(favoriteRows)
+                ? favoriteRows.map(r => r.subTagId).filter(x => x != null)
+                : [];
+
+            console.log("[promotionModel] favoriteSubtags:", favoriteSubtags);
+
+            const basePromoSelect = `
+                SELECT
+                    p.id,
+                    p.name,
+                    p.description,
+                    p.imageUrl,
+                    p.price,
+                    p.mainTagId,
+                    p.salesmanId,
+                    p.promotionType,
+                    MAX(sp.promotionValue) AS promotionValue,
+                    COALESCE(SUM(s.productQuantity), 0) AS totalSales
+                FROM product p
+                JOIN singlepromotion sp ON sp.productId = p.id
+                LEFT JOIN sale s ON s.productId = p.id
             `;
 
-            db.query(q2, [userId], (err2, favSubtagsRaw) => {
-                if (err2) return reject(err2);
+            const groupBy = ` GROUP BY p.id `;
 
-                const favoriteSubtags = favSubtagsRaw.map(r => r.subTagId);
+            if (favoriteSubtags.length === 0) {
+                const qOnlyPromos = basePromoSelect + groupBy + ` ORDER BY totalSales DESC LIMIT 50 `;
+                console.log("[promotionModel] Nenhuma subtag favorita. Executando qOnlyPromos");
+                return db.query(qOnlyPromos, [], (errPromo, resultPromo) => {
+                    if (errPromo) {
+                        console.error("[promotionModel] ERRO qOnlyPromos:", errPromo);
+                        return reject(errPromo);
+                    }
+                    console.log("[promotionModel] qOnlyPromos result count:", resultPromo?.length || 0);
+                    return resolve(resultPromo || []);
+                });
+            }
 
-                if (favoriteSubtags.length === 0) {
-                    console.log("[2.1] Nenhuma subtag favorita → só promoções");
-                    return resolve(promotions);
+            const limitFav = 20;
+            const favPlaceholders = favoriteSubtags.map(() => "?").join(",");
+            const qFavPromo = `
+                ${basePromoSelect}
+                JOIN itemsubtag ist ON ist.itemId = p.id
+                WHERE ist.subTagId IN (${favPlaceholders})
+                ${groupBy}
+                ORDER BY totalSales DESC
+                LIMIT ${limitFav}
+            `;
+
+            console.log("[promotionModel] Executando qFavPromo:", qFavPromo);
+            db.query(qFavPromo, favoriteSubtags, (errFavPromo, favPromoResults) => {
+                if (errFavPromo) {
+                    console.error("[promotionModel] ERRO qFavPromo:", errFavPromo);
+                    return reject(errFavPromo);
                 }
 
-                const q3 = `
-                    SELECT 
-                        p.id,
-                        p.itemId,
-                        p.subTagId,
-                        i.name
-                    FROM product p
-                    JOIN item i ON i.id = p.itemId
-                    WHERE p.subTagId IN (${favoriteSubtags.map(_ => "?").join(",")})
-                    LIMIT 50
-                `;
+                const favCount = favPromoResults?.length || 0;
+                console.log("[promotionModel] favPromoResults count:", favCount);
 
-                db.query(q3, favoriteSubtags, (err3, favoriteProducts) => {
-                    if (err3) return reject(err3);
-                    const promoIds = promotions.map(p => p.id);
-                    const favoriteIds = favoriteProducts.map(p => p.id);
-                    const intersection = favoriteProducts.filter(p => promoIds.includes(p.id));
-                    const finalList = [...intersection, ...promotions];
-                    return resolve(finalList);
+                const idsFav = favPromoResults.map(r => r.id).filter(x => x != null);
+                console.log("[promotionModel] idsFav:", idsFav);
+
+                const remainingLimit = 50 - favCount;
+
+                if (remainingLimit <= 0) {
+                    console.log("[promotionModel] Retornando apenas favoritos (limite atingido)");
+                    return resolve(favPromoResults);
+                }
+
+                let qOtherPromo = basePromoSelect;
+                const paramsOther = [];
+
+                if (idsFav.length > 0) {
+                    const idsPlaceholders = idsFav.map(() => "?").join(",");
+                    qOtherPromo += ` WHERE p.id NOT IN (${idsPlaceholders}) `;
+                    paramsOther.push(...idsFav);
+                }
+
+                qOtherPromo += groupBy + ` ORDER BY totalSales DESC LIMIT ${remainingLimit}`;
+
+                console.log("[promotionModel] Executando qOtherPromo:", qOtherPromo, "params:", paramsOther);
+                db.query(qOtherPromo, paramsOther, (errOther, otherResults) => {
+                    if (errOther) {
+                        console.error("[promotionModel] ERRO qOtherPromo:", errOther);
+                        return reject(errOther);
+                    }
+
+                    console.log("[promotionModel] otherResults count:", otherResults?.length || 0);
+
+                    const finalMap = new Map();
+
+                    favPromoResults.forEach(p => finalMap.set(p.id, p));
+                    otherResults.forEach(p => {
+                        if (!finalMap.has(p.id)) finalMap.set(p.id, p);
+                    });
+
+                    const final = Array.from(finalMap.values()).slice(0, 50);
+                    console.log("[promotionModel] final count:", final.length);
+
+                    return resolve(final);
                 });
             });
         });
     });
 }
-
 
 
 async function getCampaignsModel() {
