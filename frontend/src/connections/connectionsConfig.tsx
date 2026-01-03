@@ -15,11 +15,19 @@ export async function StandardFunction({
         if (requestType === "GET") {
             const res = await api.get(route, {headers:{"whitchFunction":whitchFunction}});
             console.log(res.data);
+            if (res.data.msg == "incorrectUserType") {
+                window.location.href = "/incorrectusertype"; 
+                return false;
+            }
             return res.data;
         }
         
         const res = await api.post(route, { whitchFunction, body });
         console.log(res.data);
+        if (res.data.msg == "incorrectUserType") {
+            window.location.href = "/incorrectusertype"; 
+            return false;
+        }
         return res.data;
     }
     catch (error) {

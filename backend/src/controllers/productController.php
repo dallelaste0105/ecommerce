@@ -9,7 +9,18 @@ class ProductController {
         $this->db = $db;
     }
 
+    private function requireSeller() {
+    if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "seller") {
+        echo json_encode([
+            "ok" => false, 
+            "msg" => "incorrectUserType"
+        ]);
+        exit;
+    }
+}
+
     function createProductController() {
+        $this->requireSeller();
         $req = json_decode(file_get_contents("php://input"), true);
         $body = $req["body"] ?? null;
 
@@ -103,6 +114,23 @@ class ProductController {
         $productModel = new ProductModel($this->db);
         
         $products = $productModel->getStoreSearchedProductsModel($searchedWord);
+        
+        return [
+            "ok" => true,
+            "msg" => $products
+        ];
+    }
+
+    function sellerGetStoreSearchedProductsController(){
+        $this->requireSeller();
+        $req = json_decode(file_get_contents("php://input"), true);
+        $body = $req["body"] ?? null;
+
+        $searchedWord = $body["searchedWord"] ?? "";
+
+        $productModel = new ProductModel($this->db);
+        
+        $products = $productModel->sellerGetStoreSearchedProductsModel($searchedWord);
         
         return [
             "ok" => true,

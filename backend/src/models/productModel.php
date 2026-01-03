@@ -94,5 +94,12 @@ class ProductModel {
         return $products->toArray();
     }
 
+    function sellerGetStoreSearchedProductsModel($searchedWord){
+        $products = $this->db->products->find([
+            "name" => new MongoDB\BSON\Regex($searchedWord, 'i')
+        ]);
+        return $products->toArray();
+    }//pegar somente os produtos do vendedor
+
 }
 ?>

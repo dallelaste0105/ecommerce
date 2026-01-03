@@ -21,22 +21,19 @@ class CredentialModel {
     }
 
     function loginModel($name, $password) {
-        $res = $this->db->users->findOne(["name" => $name]);
-
-        if (!$res) {
-            return false;
-        }
-
-        $userId = $this->db->users->findOne([
-            "name"=> $name
-        ]);
-
-        if (password_verify($password, $res["password"])) {
-            $_SESSION["userId"] = $userId;
-            return true;
-        }
-
+    $user = $this->db->users->findOne(["name" => $name]);
+    if (!$user) {
         return false;
     }
+
+    if (password_verify($password, $user["password"])) {
+        $_SESSION["userId"] = (string) $user["_id"];
+        $_SESSION["role"] = (string) $user["role"];
+        
+        return true;
+    }
+
+    return false;
+}
 }
 ?>

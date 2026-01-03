@@ -30,11 +30,28 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
         case 'showStoreProducts':
             echo json_encode($storeController->showStoreProductsController());
             break;
+        case 'sellerShowStoreProducts':
+            echo json_encode($storeController->sellerShowStoreProductsController());
+            break;
 
         default:
             echo json_encode(["ok" => false, "msg" => "Função inválida"]);
     }
-} else {
+}
+else if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    switch ($whitchFunction) {
+        case 'addProductPromotion':
+            echo json_encode($storeController->addProductPromotionController());
+            break;
+        case 'removeProductPromotion':
+            echo json_encode($storeController->removeProductPromotionController());
+            break;
+
+        default:
+            echo json_encode(["ok" => false, "msg" => "Função inválida"]);
+    }
+}
+else {
     echo json_encode(["ok" => false, "msg" => "Método inválido"]);
 }
 ?>

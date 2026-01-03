@@ -1,4 +1,4 @@
-import { StoreProductsContainer } from "../../containers/storeContainers/storeProductsContainer"
+import { StoreProductsContainer } from "../../containers/storeContainers/storeProductsContainer";
 import { SearchProductComponent } from "../../components/productComponents/searchProductComponent";
 import { useSearchParams } from "react-router-dom";
 

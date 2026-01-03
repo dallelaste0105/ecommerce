@@ -54,3 +54,11 @@ export function GetStoreSearchedProductsConnection({ body }: { body: Record<stri
     });
 }
 
+export function SellerGetStoreSearchedProductsConnection({ body }: { body: Record<string, any> }) {
+    return StandardFunction({
+        requestType: "POST",
+        route: "/productRoute.php",
+        whitchFunction: "sellerGetStoreSearchedProducts",
+        body: body
+    });
+}

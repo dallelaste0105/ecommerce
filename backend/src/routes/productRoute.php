@@ -46,6 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         case 'getStoreSearchedProducts':
             echo json_encode($productController->getStoreSearchedProductsController());
             break;
+        case 'sellerGetStoreSearchedProducts':
+            echo json_encode($productController->sellerGetStoreSearchedProductsController());
+            break;
 
         default:
             echo json_encode(["ok" => false, "msg" => "Função inválida"]);
